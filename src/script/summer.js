@@ -2,7 +2,7 @@
  * Summer JavaScript Library
  * Copyright (c) 2016 yonyou.com
  * Author: gct@yonyou.com go
- * Version: 1.0.20160706
+ * Version: 3.0.20160726
  */
 
 ;(function(w){
@@ -735,12 +735,28 @@
 
    
     /******************** Native API BEGIN ********************/
-	var umStorage = function(){
-        var ls = window.localStorage;
-        if(u.os == "android"){
-           ls = summer.localStorage();
-        }
-        return ls;
+	var umStorage = function(type){
+		type = type || "localStorage";
+		if(type == "localStorage"){
+			if(!window.localStorage){
+		        alert('your device do not support the localStorage');
+				return;
+		    }
+			return window.localStorage;
+		}else if(type == "sessionStorage"){
+			if(!window.sessionStorage){
+		        alert('your device do not support the sessionStorage');
+				return;
+		    }
+			return window.sessionStorage;
+		}else{
+			return null;
+			/*
+			if($summer.os == "android"){
+				ls = summer.localStorage();
+			}
+			*/
+		}
     };
 	u.setStorage = function(key, value){
         if(arguments.length === 2){
@@ -783,10 +799,10 @@
         }
     };
     u.fixIos7Bar = function(el){
-        // if(!u.isElement(el)){
-        //     console.warn('$api.fixIos7Bar Function need el param, el param must be DOM Element');
-        //     return;
-        // }
+        if(!u.isElement(el)){
+            alert('$summer.fixIos7Bar Function need el param, el param must be DOM Element');
+			return;
+        }
         // var strDM = api.systemType;
         // if (strDM == 'ios') {
         //     var strSV = api.systemVersion;
@@ -797,6 +813,15 @@
         //         el.style.paddingTop = '20px';
         //     }
         // }
+		if($summer.os == "ios"){
+         	el.style.paddingTop = '20px';
+            /*
+	        $(el).find(".um-back, .um-header-right, .um-header-left").each(function(){
+	   			this.style.top = '20px';
+	  		});
+	  		*/
+			$(el).find(".um-back, .um-header-right, .um-header-left").css("top","20px");
+        }
     };
     u.toast = function(title, text, time){
         // var opts = {};
@@ -972,37 +997,37 @@
 			if(s.canrequire())
             return s.cordova.require('summer-plugin-frame.XFrame').openWin(json, successFn, errFn);
         },
-        closeWin : function(){
+        closeWin : function(json, successFn, errFn){
 			if(s.canrequire())
-            return s.cordova.require('summer-plugin-frame.XFrame').closeWin();
+				return s.cordova.require('summer-plugin-frame.XFrame').closeWin(json, successFn, errFn);
         },
-        setFrameAttr : function(json){
+        setFrameAttr : function(json, successFn, errFn){
 			if(s.canrequire())
-            return s.cordova.require('summer-plugin-frame.XFrame').setFrameAttr(json);
+            return s.cordova.require('summer-plugin-frame.XFrame').setFrameAttr(json, successFn, errFn);
         },
-        winParam : function(json){
+        winParam : function(json, successFn, errFn){
 			if(s.canrequire())
-            return s.cordova.require('summer-plugin-frame.XFrame').winParam(json);
+            return s.cordova.require('summer-plugin-frame.XFrame').winParam(json, successFn, errFn);
         },
-        frameParam : function(json){
+        frameParam : function(json, successFn, errFn){
 			if(s.canrequire())
-            return s.cordova.require('summer-plugin-frame.XFrame').frameParam(json);
+            return s.cordova.require('summer-plugin-frame.XFrame').frameParam(json, successFn, errFn);
         },
-        setRefreshHeaderInfo : function(json,success,error){
+        setRefreshHeaderInfo : function(json, successFn, errFn){
 			if(s.canrequire())
-            return s.cordova.require('summer-plugin-frame.XFrame').setRefreshHeaderInfo(json,success,error);
+            return s.cordova.require('summer-plugin-frame.XFrame').setRefreshHeaderInfo(json, successFn, errFn);
         },
-        refreshHeaderLoadDone : function(json,success,error){
+        refreshHeaderLoadDone : function(json, successFn, errFn){
 			if(s.canrequire())
-            return s.cordova.require('summer-plugin-frame.XFrame').refreshHeaderLoadDone(json,success,error);
+            return s.cordova.require('summer-plugin-frame.XFrame').refreshHeaderLoadDone(json, successFn, errFn);
         },
-        setRefreshFooterInfo : function(json,success,error){
+        setRefreshFooterInfo : function(json, successFn, errFn){
 			if(s.canrequire())
-            return s.cordova.require('summer-plugin-frame.XFrame').setRefreshFooterInfo(json,success,error);
+            return s.cordova.require('summer-plugin-frame.XFrame').setRefreshFooterInfo(json, successFn, errFn);
         },
-        refreshFooterLoadDone : function(json,success,error){
+        refreshFooterLoadDone : function(json, successFn, errFn){
 			if(s.canrequire())
-            return s.cordova.require('summer-plugin-frame.XFrame').refreshFooterLoadDone(json,success,error);
+            return s.cordova.require('summer-plugin-frame.XFrame').refreshFooterLoadDone(json, successFn, errFn);
         }
     };
 
