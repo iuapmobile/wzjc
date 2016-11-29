@@ -320,6 +320,7 @@ function ajaxRequest(url, method, bodyParam, callBack) {
 
         callBack(JSON.parse(response.data));
     }, function(response) {
+    	alert("请求后台数据失败，line323")
         console.error(response.error);
         alert(JSON.stringify(response))
     });

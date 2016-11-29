@@ -1,111 +1,35 @@
 /*
  * Summer JavaScript Library
  * Copyright (c) 2016 yonyou.com
- * Author: gct@yonyou.com go
- * Version: 3.0.0.20160823.2047
+ * Author: gct@yonyou.com
+ * Version: 0.3.0.20161118.1 526
  */
-;(function(w){
-    w.$summer = {};
-    w.summer = {};
-    w.api = w.summer;
-    (function(){
-    	var url = document.location.pathname.split("www")[0]+"www/cordova.js";
-        _script = document.createElement('script');
-        _script.id = "cordova_js";
-        _script.type = 'text/javascript';
-        _script.charset = 'utf-8';
-        _script.async = true;
-        _script.src = url;
-        _script.onload = function (e) {
-            w.$summer["cordova"] = w.cordova;
-            w.summer["cordova"] = w.cordova;
-
-            document.addEventListener('deviceready', function(){
-                //1、先通过cdv来获取页面参数
-                summer.winParam(function(ret){
-					//希望返回
-					var ctx = {
-						systemType:"android",//"ios"
-						systemVersion:7,// ios--> 7    android-->21
-						iOS7StatusBarAppearance:true,//false
-						fullScreen:true,
-						pageParam:{param0:123,param1:"abc"},
-						screenWidth:"",
-						screenHeight:"",
-						
-						winId:"",
-						winWidth:"",
-						winHeight:"",
-						
-						frameId:"",
-						frameWidth:"",
-						frameHeight:"",
-						
-						appParam:"",
-					}
-                    //alert(typeof ret)// --> object
-
-                    if(typeof ret == "string"){
-                        ret = $summer.strToJson(ret);
-
-                    }
-                    //alert($summer.jsonToStr(ret));
-                    summer['pageParam'] = ret;//原生数据都放在summer对象上
-                    //alert($summer.jsonToStr(summer.pageParam));
-
-                    if(typeof summerready == "function")
-                        summerready();
-                    if(typeof summerReady == "function")
-                        summerReady();  
-
-                });         
-            }, false);
-
-        };
-        if(navigator.platform.toLowerCase().indexOf("win")<0){
-        	try{
-//            document.currentScript.parentNode.insertBefore(_script, document.currentScript);
-	            fs = document.getElementsByTagName('script')[0];
-	            fs.parentNode.insertBefore(_script, fs);
-        	}catch(e){
-        		console.log(e)
-        	}
-        }else{
-        	
-        }
-    })();
-    
-    if(navigator.platform.toLowerCase().indexOf("win")>-1){
-    	//alert("DOMContentLoaded")
-    	document.addEventListener('DOMContentLoaded',function(){
-    		if(typeof summerready == "function")
-                summerready();
-            if(typeof summerReady == "function")
-                summerReady();  
-    	},false);
+ (function(global, factory){
+    if ( typeof module === "object" && typeof module.exports === "object" ) {
+        module.exports = global.document ?
+            factory( global, true ) :
+            function( w ) {
+                if ( !w.document ) {
+                    throw new Error( "jQuery requires a window with a document" );
+                }
+                return factory( w );
+            };
+    } else {
+        factory( global );
     }
-    
-    w.summer.require = function(mdlName){
-        if(window.$summer["cordova"] != window.cordova){
-           alert("---------warnning : init cordova is too late!")
-           window.$summer["cordova"] = window.cordova;
-           window.summer["cordova"] = window.cordova;
-        }
-        if(mdlName == "cordova"){
-           return window.summer["cordova"];
-        }else{
-           return window.summer["cordova"].require(mdlName);
-        }
-	};
-	w.summer.canrequire = function(){
-        if(navigator.platform.toLowerCase().indexOf("win")>-1){
-			return false;
-		}
-		return true;
-	};
-   
-   w.$summer.require = w.summer.require;
-})(window);
+}(window,function(window,noGlobal){
+    var $s = {};
+    var s = {$:$s};
+    if ( typeof define === "function" && define.amd ) {
+        define( "summer", [], function() {
+            return s;
+        });
+    }
+    window.$summer = $s;
+    window.summer = s;
+    return s;
+}))
+
 
 // JavaScript Base Type Extra API
 ;(function(){
@@ -199,7 +123,7 @@
             }
             catch (e) {
             }
-            with (Math) {
+            if (Math) {
                 r1 = Number(arg1.toString().replace(".", ""));
                 r2 = Number(arg2.toString().replace(".", ""));
                 return (r1 / r2) * pow(10, t2 - t1);
@@ -407,6 +331,132 @@
     window.$isEmpty = u.isEmpty;
     window.$summer = window.$summer || u;
 })();
+
+/*
+ * Summer JavaScript Library
+ * Copyright (c) 2016 yonyou.com
+ * Author: gct@yonyou.com go
+ * Version: 3.0.0.20160823.2047
+ */
+;(function(w){
+    w.$summer = w.$summer || {};
+    w.summer = w.summer || {};
+    w.api = w.summer;
+    (function(){
+    	var url;
+        if(document.location.href.indexOf("http")==0){
+            w.__$_CORDOVA_PATH = w.__$_CORDOVA_PATH || "..";
+            if($summer.os == "android"){
+                alert("android");
+                url = w.__$_CORDOVA_PATH + "/cordova/android/cordova.js";
+            }else if($summer.os == "ios"){
+                alert("ios");
+                url = w.__$_CORDOVA_PATH + "/cordova/ios/cordova.js";
+            }else{
+                alert("请在移动设备上访问")
+                //url = path + "ios/cordova.js";
+            }
+        
+        }else{
+            url = document.location.pathname.split("www")[0]+"www/cordova.js";
+        }
+        var _script;
+        var _script = document.createElement('script');
+        _script.id = "cordova_js";
+        _script.type = 'text/javascript';
+        _script.charset = 'utf-8';
+        _script.async = true;
+        _script.src = url;
+        _script.onload = function (e) {
+            w.$summer["cordova"] = w.cordova;
+            w.summer["cordova"] = w.cordova;
+
+            document.addEventListener('deviceready', function(){
+                //1、先通过cdv来获取页面参数
+                summer.winParam(function(ret){
+					//希望返回
+					var ctx = {
+						systemType:"android",//"ios"
+						systemVersion:7,// ios--> 7    android-->21
+						iOS7StatusBarAppearance:true,//false
+						fullScreen:true,
+						pageParam:{param0:123,param1:"abc"},
+						screenWidth:"",
+						screenHeight:"",
+						
+						winId:"",
+						winWidth:"",
+						winHeight:"",
+						
+						frameId:"",
+						frameWidth:"",
+						frameHeight:"",
+						
+						appParam:"",
+					}
+                    //alert(typeof ret)// --> object
+
+                    if(typeof ret == "string"){
+                        ret = $summer.strToJson(ret);
+
+                    }
+                    //alert($summer.jsonToStr(ret));
+                    summer['pageParam'] = ret;//原生数据都放在summer对象上
+                    //alert($summer.jsonToStr(summer.pageParam));
+
+                    if(typeof summerready == "function")
+                        summerready();
+                    if(typeof summerReady == "function")
+                        summerReady();  
+
+                });         
+            }, false);
+
+        };
+        if(navigator.platform.toLowerCase().indexOf("win")<0){
+        	try{
+//            document.currentScript.parentNode.insertBefore(_script, document.currentScript);
+	            fs = document.getElementsByTagName('script')[0];
+	            fs.parentNode.insertBefore(_script, fs);
+        	}catch(e){
+        		console.log(e)
+        	}
+        }else{
+        	
+        }
+    })();
+    
+    if(navigator.platform.toLowerCase().indexOf("win")>-1){
+    	//alert("DOMContentLoaded")
+    	document.addEventListener('DOMContentLoaded',function(){
+    		if(typeof summerready == "function")
+                summerready();
+            if(typeof summerReady == "function")
+                summerReady();  
+    	},false);
+    }
+    
+    w.summer.require = function(mdlName){
+        if(window.$summer["cordova"] != window.cordova){
+           alert("---------warnning : init cordova is too late!")
+           window.$summer["cordova"] = window.cordova;
+           window.summer["cordova"] = window.cordova;
+        }
+        if(mdlName == "cordova"){
+           return window.summer["cordova"];
+        }else{
+           return window.summer["cordova"].require(mdlName);
+        }
+	};
+	w.summer.canrequire = function(){
+        if(navigator.platform.toLowerCase().indexOf("win")>-1){
+			return false;
+		}
+		return true;
+	};
+   
+   w.$summer.require = w.summer.require;
+})(window);
 
 
 //HTML DOM API by gct
@@ -847,47 +897,7 @@
                 $(el).children().css("top",statusBarHeight+'px');
         }
     };
-    u.toast = function(title, text, time){
-        // var opts = {};
-        // var show = function(opts, time){
-        //     api.showProgress(opts);
-        //     setTimeout(function(){
-        //         api.hideProgress();
-        //     },time);
-        // };
-        // if(arguments.length === 1){
-        //     var time = time || 500;
-        //     if(typeof title === 'number'){
-        //         time = title;
-        //     }else{
-        //         opts.title = title+'';
-        //     }
-        //     show(opts, time);
-        // }else if(arguments.length === 2){
-        //     var time = time || 500;
-        //     var text = text;
-        //     if(typeof text === "number"){
-        //         var tmp = text;
-        //         time = tmp;
-        //         text = null;
-        //     }
-        //     if(title){
-        //         opts.title = title;
-        //     }
-        //     if(text){
-        //         opts.text = text;
-        //     }
-        //     show(opts, time);
-        // }
-        // if(title){
-        //     opts.title = title;
-        // }
-        // if(text){
-        //     opts.text = text;
-        // }
-        // time = time || 500;
-        // show(opts, time);
-    };
+   
     u.post = function(/*url,data,fnSuc,dataType*/){
         // var argsToJson = parseArguments.apply(null, arguments);
         // var json = {};
@@ -1003,7 +1013,7 @@
 	
 	//ios Asynchronous
 	if(typeof UM_callNativeServiceNoraml == "undefined"){
-		UM_callNativeServiceNoraml = function(serviceType,strParams){//异步调用，和安卓统一接口
+		var UM_callNativeServiceNoraml = function(serviceType,strParams){//异步调用，和安卓统一接口
 			return adrinvoker.call(serviceType,strParams);
 		}
 	}else{
@@ -1092,25 +1102,25 @@
 				$summer.alert(json);
 				delete json["alert"];
 			}
-			return this.callCordova('summer-plugin-frame.XFrame','openFrame',json, successFn, errFn);
+			return s.callCordova('summer-plugin-frame.XFrame','openFrame',json, successFn, errFn);
         },
         closeFrame : function(json, successFn, errFn){
-			return this.callCordova('summer-plugin-frame.XFrame','closeFrame',json, successFn, errFn);
+			return s.callCordova('summer-plugin-frame.XFrame','closeFrame',json, successFn, errFn);
         },
         openFrameGroup : function(json, successFn, errFn){
-			return this.callCordova('summer-plugin-frame.XFrame', 'openFrameGroup', json, successFn, errFn);
+			return s.callCordova('summer-plugin-frame.XFrame', 'openFrameGroup', json, successFn, errFn);
 		},
 		closeFrameGroup : function(json, successFn, errFn){
-			return this.callCordova('summer-plugin-frame.XFrame', 'closeFrameGroup', json, successFn, errFn);
+			return s.callCordova('summer-plugin-frame.XFrame', 'closeFrameGroup', json, successFn, errFn);
 		},
 		setFrameGroupAttr : function(json, successFn, errFn){
-			return this.callCordova('summer-plugin-frame.XFrame', 'setFrameGroupAttr', json, successFn, errFn);
+			return s.callCordova('summer-plugin-frame.XFrame', 'setFrameGroupAttr', json, successFn, errFn);
 		},
 		setFrameGroupIndex : function(json, successFn, errFn){
-			return this.callCordova('summer-plugin-frame.XFrame', 'setFrameGroupIndex', json, successFn, errFn);
+			return s.callCordova('summer-plugin-frame.XFrame', 'setFrameGroupIndex', json, successFn, errFn);
 		},
         openWin : function(json, successFn, errFn){
-			return this.callCordova('summer-plugin-frame.XFrame', 'openWin', json, successFn, errFn);
+			return s.callCordova('summer-plugin-frame.XFrame', 'openWin', json, successFn, errFn);
         },
         closeWin : function(json, successFn, errFn){
 			//support closeWin('xxx') and closeWin({id:'xxx'})
@@ -1119,7 +1129,7 @@
 			}else if(typeof json == "undefined"){
 				json = {};
 			}				
-			return this.callCordova('summer-plugin-frame.XFrame', 'closeWin', json, successFn, errFn);
+			return s.callCordova('summer-plugin-frame.XFrame', 'closeWin', json, successFn, errFn);
 		},
 		closeToWin : function(json, successFn, errFn){
 			//support closeWin('xxx') and closeWin({id:'xxx'})
@@ -1128,7 +1138,7 @@
 			}else if(typeof json == "undefined"){
 				json = {};
 			}				
-			return this.callCordova('summer-plugin-frame.XFrame', 'closeToWin', json, successFn, errFn);
+			return s.callCordova('summer-plugin-frame.XFrame', 'closeToWin', json, successFn, errFn);
 		},
 		getSysInfo : function(json, successFn, errFn){
 			//support closeWin('xxx') and closeWin({id:'xxx'})
@@ -1220,6 +1230,12 @@
     	var invoker = summer.require('summer-plugin-service.XService');
     	json = json || {};
         invoker.call("UMJS.hideLoadingBar",json);
+    };
+    s.toast = function(json){
+		if(!s.canrequire()) return;
+    	var invoker = summer.require('summer-plugin-service.XService');
+    	json = json || {};
+        invoker.call("UMJS.toast",json);
     };
     //upload方法
     s.upload = function(json,sFn,eFn,headers){		

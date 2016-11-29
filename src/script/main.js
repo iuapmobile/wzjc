@@ -87,7 +87,7 @@ function getBanner(id) {
             initSlide();
         } else {
             api.alert({
-                msg: err.msg
+                msg: "未请求到数据：" + err.msg
             });
         }
     })
